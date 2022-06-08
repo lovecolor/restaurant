@@ -19,7 +19,6 @@ export default {
   props: ["product"],
   methods: {
     handleClickProduct() {
-      console.log("asd");
       this.$emit("pickProduct", this.product);
     },
   },

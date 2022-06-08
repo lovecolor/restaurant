@@ -86,4 +86,7 @@ export default {
 .el-header {
   background: #409eff;
 }
+.el-message-box {
+  min-width: 350px;
+}
 </style>

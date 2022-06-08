@@ -33,9 +33,17 @@
         </el-table-column>
       </el-table>
       <div class="d-flex justify-content-center mt-3">
-        <el-button type="primary">ORDER</el-button>
+        <el-button type="primary" @click="showTable = true">ORDER</el-button>
       </div>
-      <tables></tables>
+      <div class="table-wrap">
+        <div>
+          <i @click="showTable = false" class="el-icon-back"></i>
+        </div>
+        <div class="d-flex justify-content-center mb-3">
+          <h3>Please choose your table !!!</h3>
+        </div>
+        <tables v-if="showTable" @clickTable="handleChooseTable"></tables>
+      </div>
     </el-main>
   </el-container>
 </template>
@@ -45,9 +53,20 @@ export default {
   data() {
     return {
       cart: [],
+      showTable: false,
     };
   },
   methods: {
+    async handleChooseTable(table) {
+      await this.$fire.database.ref(`orders/${table}`).set({
+        ...this.cart,
+      });
+      this.$message({
+        type: "success",
+        message: "Success",
+      });
+      this.$router.push(`tables/${table}`);
+    },
     goToMenu() {
       this.$router.push("/");
     },
@@ -70,6 +89,17 @@ export default {
 </script>
 
 <style>
+.table-wrap {
+  background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  max-height: 100%;
+  z-index: 1000;
+  padding: 1rem;
+  overflow-y: auto;
+}
 .el-icon-back {
   font-size: 50px;
 }
