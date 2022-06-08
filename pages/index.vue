@@ -72,7 +72,7 @@ export default {
       this.stopLoading();
     },
     getCart() {
-      this.cart = JSON.parse(localStorage.getItem("cart"));
+      this.cart = JSON.parse(localStorage.getItem("cart")) || [];
     },
   },
 
