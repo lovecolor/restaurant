@@ -1,7 +1,12 @@
 <template>
   <el-container>
-    <el-header class="d-flex align-items-center justify-content-center"
-      ><el-button @click="goToCart" icon="el-icon-shopping-cart-2"></el-button
+    <el-header class="d-flex align-items-center justify-content-between"
+      ><el-button @click="goToTables" icon="el-icon-office-building"></el-button
+      ><el-badge :value="cart.length">
+        <el-button
+          @click="goToCart"
+          icon="el-icon-shopping-cart-2"
+        ></el-button> </el-badge
     ></el-header>
     <el-main>
       <div class="d-flex justify-content-center mb-1">
@@ -26,9 +31,16 @@ export default {
       cart: [],
     };
   },
+  beforeDestroy() {
+    localStorage.setItem("cart", JSON.stringify(this.cart));
+  },
+
   methods: {
+    goToTables() {
+      this.$router.push("/tables");
+    },
+
     goToCart() {
-      localStorage.setItem("cart", JSON.stringify(this.cart));
       this.$router.push("/cart");
     },
     pickProduct(product) {
@@ -36,13 +48,21 @@ export default {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         inputPattern: /^[1-9]\d*$/,
+        inputValue: 1,
         inputErrorMessage: "Invalid Quantity",
       }).then(({ value }) => {
-        this.cart.push({
-          ...product,
-          quantity: value,
-          price: product.price * value,
-        });
+        const exist = this.cart.find((x) => x.id === product.id);
+        if (!!exist) {
+          exist.quantity += value;
+          exist.price += value * product.price;
+        } else {
+          this.cart.push({
+            ...product,
+            quantity: value,
+            price: product.price * value,
+          });
+        }
+
         this.$message({
           type: "success",
           message: "Success",

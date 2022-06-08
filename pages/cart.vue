@@ -35,17 +35,19 @@
         </el-table-column>
       </el-table>
       <div class="d-flex justify-content-center mt-3">
-        <el-button type="primary" @click="showTable = true">ORDER</el-button>
+        <el-button type="primary" @click="handleOrder">ORDER</el-button>
       </div>
-      <div v-if="showTable" class="table-wrap">
-        <div>
-          <i @click="showTable = false" class="el-icon-back"></i>
+      <transition name="el-zoom-in-center">
+        <div v-if="showTable" class="table-wrap">
+          <div>
+            <i @click="showTable = false" class="el-icon-back"></i>
+          </div>
+          <div class="d-flex justify-content-center mb-3">
+            <h3>Please choose your table !!!</h3>
+          </div>
+          <tables :tables="tables" @clickTable="handleChooseTable"></tables>
         </div>
-        <div class="d-flex justify-content-center mb-3">
-          <h3>Please choose your table !!!</h3>
-        </div>
-        <tables @clickTable="handleChooseTable"></tables>
-      </div>
+      </transition>
     </el-main>
   </el-container>
 </template>
@@ -56,11 +58,46 @@ export default {
     return {
       cart: [],
       showTable: false,
+      loading: null,
+      tables: [],
     };
   },
   methods: {
+    handleOrder() {
+      this.fetchTables();
+      this.showTable = true;
+    },
+    startLoading() {
+      this.loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+    },
+    stopLoading() {
+      this.loading.close();
+    },
+
+    async fetchTables() {
+      this.startLoading();
+      const ref = await this.$fire.database.ref("tables").get();
+      const result = ref.val();
+      console.log(result);
+      this.tables = result;
+      this.stopLoading();
+    },
+
     async handleChooseTable(table) {
-      await this.$fire.database.ref(`orders/${table}`).set({
+      await this.fetchTables();
+      if (!!this.tables[table]) {
+        this.$message({
+          type: "error",
+          message: "This table is occupied!!!",
+        });
+        return;
+      }
+      await this.$fire.database.ref(`tables/${table}`).set({
         ...this.cart,
       });
       this.$message({
@@ -69,10 +106,7 @@ export default {
       });
       this.$router.push(`tables/${table}`);
     },
-    goToMenu() {
-      console.log("asd");
-      this.$router.push("/");
-    },
+
     handleIncreaseQuantity(product) {
       product.quantity++;
     },

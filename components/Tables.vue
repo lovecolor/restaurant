@@ -1,10 +1,13 @@
 <template>
   <el-row :gutter="20">
-    <el-col :span="8" :xs="24" v-for="o in 9" :key="o">
-      <div @click="handleClickTable(o)">
-        <el-card class="table-card mb-3" :body-style="{ padding: '0px' }">
+    <el-col :span="8" :xs="24" v-for="(table, index) in tables" :key="index">
+      <div @click="handleClickTable(index)">
+        <el-card
+          :class="['table-card mb-3', { 'table-be-choose': !!table }]"
+          :body-style="{ padding: '0px' }"
+        >
           <span class="table-text">
-            {{ o }}
+            {{ +index + 1 }}
           </span>
         </el-card>
       </div>
@@ -14,6 +17,7 @@
 
 <script>
 export default {
+  props: ["tables"],
   methods: {
     handleClickTable(table) {
       this.$emit("clickTable", table);
@@ -33,5 +37,8 @@ export default {
 .table-text {
   font-size: 50px;
   font-weight: bold;
+}
+.table-be-choose {
+  background: #409eff;
 }
 </style>

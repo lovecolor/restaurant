@@ -1,4 +1,8 @@
 export default {
+  loading: {
+    color: "blue",
+    height: "5px",
+  },
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
@@ -68,6 +72,6 @@ export default {
   },
   target: "static",
   router: {
-    base: '/restaurant/'
-  }
+    base: "/restaurant/",
+  },
 };

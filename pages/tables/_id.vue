@@ -1,10 +1,10 @@
 <template>
   <div>
     <div>
-      <nuxt-link to="/"><i class="el-icon-back"></i> </nuxt-link>
+      <nuxt-link to="/tables"><i class="el-icon-back"></i> </nuxt-link>
     </div>
     <div class="d-flex justify-content-center mt-3">
-      <h3>Table {{ id }}</h3>
+      <h3>Table {{ +id + 1 }}</h3>
     </div>
     <el-table
       class="my-3"
@@ -18,7 +18,7 @@
       <el-table-column prop="price" label="Price"> </el-table-column>
     </el-table>
     <div class="d-flex justify-content-center">
-      <el-button type="primary">CHECKOUT</el-button>
+      <el-button type="primary" @click="handleCheckout">CHECKOUT</el-button>
     </div>
   </div>
 </template>
@@ -33,6 +33,10 @@ export default {
     };
   },
   methods: {
+    handleCheckout() {
+      this.$fire.database.ref(`tables/${this.id}`).set("");
+      this.meals = [];
+    },
     startLoading() {
       this.loading = this.$loading({
         lock: true,
@@ -46,8 +50,8 @@ export default {
     },
     async fetchTable() {
       this.startLoading();
-      const res = await this.$fire.database.ref(`orders/${this.id}`).get();
-      this.meals = res.val();
+      const res = await this.$fire.database.ref(`tables/${this.id}`).get();
+      this.meals = res.val() || [];
       this.stopLoading();
     },
   },
@@ -58,4 +62,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.el-icon-back {
+  font-size: 50px;
+  color: black;
+}
+</style>
