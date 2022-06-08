@@ -1,6 +1,8 @@
 <template>
   <el-container>
-    <el-header><i @click="goToMenu" class="el-icon-back"></i></el-header>
+    <el-header>
+      <nuxt-link to="/"> <i class="el-icon-back"></i></nuxt-link>
+    </el-header>
     <el-main>
       <div class="d-flex justify-content-center mb-1">
         <h3>CART</h3>
@@ -35,14 +37,14 @@
       <div class="d-flex justify-content-center mt-3">
         <el-button type="primary" @click="showTable = true">ORDER</el-button>
       </div>
-      <div class="table-wrap">
+      <div v-if="showTable" class="table-wrap">
         <div>
           <i @click="showTable = false" class="el-icon-back"></i>
         </div>
         <div class="d-flex justify-content-center mb-3">
           <h3>Please choose your table !!!</h3>
         </div>
-        <tables v-if="showTable" @clickTable="handleChooseTable"></tables>
+        <tables @clickTable="handleChooseTable"></tables>
       </div>
     </el-main>
   </el-container>
@@ -68,6 +70,7 @@ export default {
       this.$router.push(`tables/${table}`);
     },
     goToMenu() {
+      console.log("asd");
       this.$router.push("/");
     },
     handleIncreaseQuantity(product) {
@@ -102,5 +105,6 @@ export default {
 }
 .el-icon-back {
   font-size: 50px;
+  color: black;
 }
 </style>

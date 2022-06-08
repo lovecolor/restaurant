@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      <nuxt-link to="/"><i class="el-icon-back"></i> </nuxt-link>
+    </div>
     <div class="d-flex justify-content-center mt-3">
       <h3>Table {{ id }}</h3>
     </div>
