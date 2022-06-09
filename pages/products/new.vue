@@ -1,7 +1,7 @@
 <template>
   <div class="p-3">
     <div class="mb-3">
-      <nuxt-link to="/"> <i class="el-icon-back"></i></nuxt-link>
+      <nuxt-link to="/products"> <i class="el-icon-back"></i></nuxt-link>
     </div>
     <el-input
       class="mb-3"
@@ -38,7 +38,6 @@ export default {
   methods: {
     createNewProduct() {
       const newPostKey = this.$fire.database.ref("products").push().key;
-      console.log(newPostKey);
       // Write the new post's data simultaneously in the posts list and the user's post list.
       var updates = {};
       updates["/products/" + newPostKey] = this.newProduct;

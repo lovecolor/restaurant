@@ -1,8 +1,11 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header class="d-flex justify-content-between align-items-center">
       <nuxt-link to="/"> <i class="el-icon-back"></i></nuxt-link
-    ></el-header>
+      ><nuxt-link to="/products/new">
+        <el-button>NEW</el-button></nuxt-link
+      ></el-header
+    >
     <el-main>
       <product-list :products="products" @pickProduct="changeProduct" />
     </el-main>

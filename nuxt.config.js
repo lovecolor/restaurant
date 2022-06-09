@@ -71,7 +71,7 @@ export default {
     transpile: [/^element-ui/],
   },
   target: "static",
-  router: {
-    base: "/restaurant/",
-  },
+  // router: {
+  //   base: "/restaurant/",
+  // },
 };

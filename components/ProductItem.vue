@@ -6,7 +6,7 @@
         <div style="padding: 14px">
           <span>{{ product.name }}</span>
           <div class="bottom clearfix">
-            <span class="time">{{ product.price }}</span>
+            <span class="time">{{ product.price }} đồng</span>
           </div>
         </div>
       </el-card>

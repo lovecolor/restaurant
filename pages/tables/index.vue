@@ -47,7 +47,6 @@ export default {
       this.startLoading();
       const ref = await this.$fire.database.ref("tables").get();
       const result = ref.val();
-      console.log(result);
       this.tables = result;
       this.stopLoading();
     },
