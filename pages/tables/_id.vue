@@ -17,9 +17,6 @@
       <el-table-column prop="quantity" label="Quantity"> </el-table-column>
       <el-table-column prop="price" label="Price"> </el-table-column>
     </el-table>
-    <div class="d-flex justify-content-center">
-      <el-button type="primary" @click="handleCheckout">CHECKOUT</el-button>
-    </div>
   </div>
 </template>
 
@@ -33,10 +30,6 @@ export default {
     };
   },
   methods: {
-    handleCheckout() {
-      this.$fire.database.ref(`tables/${this.id}`).set("");
-      this.meals = [];
-    },
     startLoading() {
       this.loading = this.$loading({
         lock: true,

@@ -13,9 +13,12 @@
           style="width: 100%"
         >
           <el-table-column prop="name" label="Name"> </el-table-column>
-          <el-table-column prop="quantity" label="Quantity">
-          </el-table-column> </el-table
-      ></el-col>
+          <el-table-column prop="quantity" label="Quantity"> </el-table-column>
+        </el-table>
+        <div class="d-flex justify-content-center mt-3">
+          <el-button type="primary" @click="handleCheckout">CHECKOUT</el-button>
+        </div>
+      </el-col>
     </el-row>
     <el-row class="row-bot">
       <el-col
@@ -62,6 +65,10 @@ export default {
     };
   },
   methods: {
+    handleCheckout() {
+      this.$fire.database.ref(`tables/${this.tableShowing}`).set("");
+      this.fetchTables();
+    },
     handleClickTable(table) {
       this.tableShowing = table;
     },
@@ -77,16 +84,15 @@ export default {
       this.loading.close();
     },
     async fetchTables() {
-      this.startLoading();
       const ref = await this.$fire.database.ref("tables").get();
       const result = ref.val();
       this.tables = result;
-      this.stopLoading();
     },
   },
 
   created() {
     this.fetchTables();
+    setInterval(this.fetchTables, 5000);
   },
 };
 </script>
