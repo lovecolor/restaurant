@@ -97,7 +97,9 @@ export default {
         return;
       }
       await this.$fire.database.ref(`tables/${table}`).set({
-        ...this.cart,
+        createdDate: new Date().getTime(),
+        data: [...this.cart],
+        delivered: false,
       });
       localStorage.clear();
       this.$message({

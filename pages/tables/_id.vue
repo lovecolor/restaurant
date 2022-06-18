@@ -44,7 +44,7 @@ export default {
     async fetchTable() {
       this.startLoading();
       const res = await this.$fire.database.ref(`tables/${this.id}`).get();
-      this.meals = res.val() || [];
+      this.meals = res.val().data || [];
       this.stopLoading();
     },
   },

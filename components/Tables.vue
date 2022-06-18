@@ -1,13 +1,30 @@
 <template>
-  <el-row :gutter="20">
-    <el-col :span="8" :xs="24" v-for="(table, index) in tables" :key="index">
+  <el-row :gutter="20" class="p-3">
+    <el-col
+      :span="8"
+      :xs="24"
+      v-for="(table, index) in tables"
+      :key="table.id || index"
+    >
       <div @click="handleClickTable(index)">
         <el-card
-          :class="['table-card mb-3', { 'table-be-choose': !!table }]"
+          :class="[
+            'table-card mb-3',
+            {
+              'table-delivered':
+                !!table.data && !!table.delivered && table.delivered,
+            },
+            {
+              'table-un-delivered': !!table.data && !table.delivered,
+            },
+            {
+              'table-focus': index === focus,
+            },
+          ]"
           :body-style="{ padding: '0px' }"
         >
           <span class="table-text">
-            {{ +index + 1 }}
+            {{ table.id || index + 1 }}
           </span>
         </el-card>
       </div>
@@ -17,7 +34,7 @@
 
 <script>
 export default {
-  props: ["tables"],
+  props: ["tables", "focus"],
   methods: {
     handleClickTable(table) {
       this.$emit("clickTable", table);
@@ -38,7 +55,13 @@ export default {
   font-size: 50px;
   font-weight: bold;
 }
-.table-be-choose {
-  background: #409eff;
+.table-un-delivered {
+  background: #f56c6c;
+}
+.table-delivered {
+  background: #67c23a;
+}
+.table-focus {
+  border: 5px solid red;
 }
 </style>
