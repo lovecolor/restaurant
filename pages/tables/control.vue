@@ -112,6 +112,7 @@ export default {
   },
   data() {
     return {
+      interval: null,
       isAuto: null,
       control: null,
       tables: [],
@@ -146,12 +147,11 @@ export default {
         this.fetchTables();
       }
     },
-    handleCheckout() {
-      this.$fire.database.ref(`tables/${this.tableShowingIndex}`).set("");
+    async handleCheckout() {
+      this.$fire.database.ref(`tables/${this.tableShowing.id - 1}`).set("");
       this.fetchTables();
     },
     handleClickTable(table) {
-      console.log(table);
       this.tableShowingIndex = table;
     },
     startLoading() {
@@ -188,7 +188,10 @@ export default {
   created() {
     this.fetchControlData();
     this.fetchTables();
-    setInterval(this.fetchTables, 5000);
+    this.interval = setInterval(this.fetchTables, 5000);
+  },
+  beforeDestroy() {
+    this.interval && clearInterval(this.interval);
   },
 };
 </script>
