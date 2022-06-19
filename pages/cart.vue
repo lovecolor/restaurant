@@ -17,7 +17,7 @@
               icon="el-icon-minus"
               size="mini"
               type="info"
-              @click="handleReduceQuantity(scope.row)"
+              @click="handleDecreaseQuantity(scope.row)"
             ></el-button>
             <el-button
               icon="el-icon-plus"
@@ -110,10 +110,12 @@ export default {
     },
 
     handleIncreaseQuantity(product) {
+      product.price += product.price / product.quantity;
       product.quantity++;
     },
-    handleReduceQuantity(product) {
+    handleDecreaseQuantity(product) {
       if (product.quantity === 1) return;
+      product.price -= product.price / product.quantity;
       product.quantity--;
     },
     handleRemoveProduct(prodduct) {
@@ -123,6 +125,9 @@ export default {
   created() {
     const cart = JSON.parse(localStorage.getItem("cart"));
     this.cart = cart;
+  },
+  beforeDestroy() {
+    localStorage.setItem("cart", JSON.stringify(this.cart));
   },
 };
 </script>
