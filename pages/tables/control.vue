@@ -8,7 +8,7 @@
           @clickTable="handleClickTable"
         ></tables>
       </el-col>
-      <el-col :span="9" class="h-100">
+      <el-col :span="9" class="h-100 overflow-auto">
         <div
           v-if="!!tableShowing"
           class="d-flex align-items-center m-3 flex-column"
@@ -19,7 +19,7 @@
           </div>
         </div>
         <el-table
-          height="300px"
+          height="250"
           v-if="!!tableShowing"
           :data="tableShowing.data || []"
           border
