@@ -14,18 +14,21 @@
         <el-table-column>
           <template slot-scope="scope">
             <el-button
+              class="m-1"
               icon="el-icon-minus"
               size="mini"
               type="info"
               @click="handleDecreaseQuantity(scope.row)"
             ></el-button>
             <el-button
+              class="m-1"
               icon="el-icon-plus"
               size="mini"
               type="info"
               @click="handleIncreaseQuantity(scope.row)"
             ></el-button>
             <el-button
+              class="m-1"
               size="mini"
               type="danger"
               icon="el-icon-delete-solid"
@@ -91,6 +94,7 @@ export default {
       await this.fetchTables();
       if (!!this.tables[table]) {
         this.$message({
+          showClose: true,
           type: "error",
           message: "This table is occupied!!!",
         });
@@ -101,8 +105,10 @@ export default {
         data: [...this.cart],
         delivered: false,
       });
-      localStorage.clear();
+      this.cart = [];
+
       this.$message({
+        showClose: true,
         type: "success",
         message: "Success",
       });

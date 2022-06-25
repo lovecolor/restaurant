@@ -19,6 +19,7 @@
           </div>
         </div>
         <el-table
+          height="300px"
           v-if="!!tableShowing"
           :data="tableShowing.data || []"
           border
@@ -73,8 +74,17 @@
       </el-col>
       <el-col
         :span="12"
-        class="h-100 d-flex flex-column justify-content-center"
+        class="h-100 d-flex flex-column justify-content-center position-relative"
       >
+        <div
+          class="btn-view-history-sale d-flex justify-content-end position-absolute w-100 p-3"
+        >
+          <nuxt-link to="/history-sale">
+            <el-button icon="el-icon-view" round type="primary"
+              >View History Sale</el-button
+            >
+          </nuxt-link>
+        </div>
         <div class="d-flex justify-content-center mb-3">
           <el-button type="primary" round @click="handleStart">START</el-button>
         </div>
@@ -102,6 +112,12 @@ import Tables from "../../components/Tables.vue";
 export default {
   components: { Tables },
   computed: {
+    currentDate() {
+      return new Date().toLocaleDateString("en-ZA");
+    },
+    currentDateVN() {
+      return new Date().toLocaleDateString("vi");
+    },
     tableShowing() {
       return (
         this.tables.length > 0 &&
@@ -149,7 +165,30 @@ export default {
     },
     async handleCheckout() {
       this.$fire.database.ref(`tables/${this.tableShowing.id - 1}`).set("");
+      this.modifyHistorySale();
       this.fetchTables();
+    },
+    async modifyHistorySale() {
+      const ref = this.$fire.database.ref(`historySales/${this.currentDate}`);
+      const result = await ref.get();
+      const val = result.val() || {
+        total: 0,
+        sum: 0,
+        date: this.currentDateVN,
+      };
+      const newData = this.tableShowing.data.reduce(
+        (rs, e) => (
+          (rs = {
+            ...rs,
+            [e.id]: rs[e.id] ? rs[e.id] + e.quantity : e.quantity,
+            total: rs.total + e.quantity,
+            sum: rs.sum + e.price,
+          }),
+          rs
+        ),
+        val
+      );
+      ref.set(newData);
     },
     handleClickTable(table) {
       this.tableShowingIndex = table;
@@ -210,5 +249,8 @@ export default {
 }
 .control-container > .el-row > .el-col:first-child {
   border-right: 1px solid lightgray;
+}
+.btn-view-history-sale {
+  top: 0;
 }
 </style>

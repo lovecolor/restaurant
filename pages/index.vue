@@ -64,6 +64,7 @@ export default {
         }
 
         this.$message({
+          showClose: true,
           type: "success",
           message: "Success",
         });
