@@ -1,5 +1,8 @@
 <template>
   <div class="control-container">
+    <el-dialog title="Error" :visible.sync="dialogVisible" width="30%">
+      <i class="el-icon-warning"></i>
+    </el-dialog>
     <el-row class="row-top">
       <el-col :span="15" class="h-100">
         <tables
@@ -128,6 +131,7 @@ export default {
   },
   data() {
     return {
+      dialogVisible: false,
       interval: null,
       isAuto: null,
       control: null,
@@ -137,6 +141,11 @@ export default {
     };
   },
   methods: {
+    async fetchError() {
+      const ref = await this.$fire.database.ref("error").get();
+      const result = ref.val();
+      this.dialogVisible = result === 1 ? true : false;
+    },
     handleChangeControl(typeControl) {
       if (this.isAuto === 1) {
         this.$message.error("Please, change munual mode to apply control!!!");
@@ -227,7 +236,12 @@ export default {
   created() {
     this.fetchControlData();
     this.fetchTables();
-    this.interval = setInterval(this.fetchTables, 5000);
+    this.fetchError();
+    const vueInstance = this;
+    this.interval = setInterval(() => {
+      vueInstance.fetchTables();
+      vueInstance.fetchError();
+    }, 5000);
   },
   beforeDestroy() {
     this.interval && clearInterval(this.interval);
@@ -252,5 +266,20 @@ export default {
 }
 .btn-view-history-sale {
   top: 0;
+}
+.el-icon-warning {
+  font-size: 300px;
+  color: red;
+}
+.el-dialog__body {
+  display: flex;
+  justify-content: center;
+}
+.el-dialog__title {
+  color: red;
+  font-weight: bold;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
 }
 </style>
