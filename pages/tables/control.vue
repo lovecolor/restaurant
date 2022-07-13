@@ -1,7 +1,19 @@
 <template>
   <div class="control-container">
-    <el-dialog title="Error" :visible.sync="dialogVisible" width="30%">
-      <i class="el-icon-warning"></i>
+    <div class="d-flex">
+      <span>Battery</span>
+      <el-progress
+        class="m-1"
+        :stroke-width="20"
+        :percentage="battery"
+        :status="
+          battery < 20 ? 'exception' : battery < 50 ? 'warning' : 'success'
+        "
+        :text-inside="true"
+      />
+    </div>
+    <el-dialog :visible.sync="dialogVisible" width="30%">
+      <el-result icon="error" title="Error"> </el-result>
     </el-dialog>
     <el-row class="row-top">
       <el-col :span="15" class="h-100">
@@ -131,6 +143,7 @@ export default {
   },
   data() {
     return {
+      battery: 100,
       dialogVisible: false,
       interval: null,
       isAuto: null,
@@ -141,6 +154,13 @@ export default {
     };
   },
   methods: {
+    async fetchBattery() {
+      const ref = await this.$fire.database.ref("mucpin").get();
+      const result = ref.val();
+      if (result) {
+        this.battery = result;
+      }
+    },
     async fetchError() {
       const ref = await this.$fire.database.ref("error").get();
       const result = ref.val();
@@ -231,17 +251,17 @@ export default {
       const resultControl = refControl.val();
       this.control = resultControl;
     },
+    fetchData() {
+      this.fetchTables();
+      this.fetchError();
+      this.fetchBattery();
+    },
   },
 
   created() {
     this.fetchControlData();
-    this.fetchTables();
-    this.fetchError();
-    const vueInstance = this;
-    this.interval = setInterval(() => {
-      vueInstance.fetchTables();
-      vueInstance.fetchError();
-    }, 5000);
+    this.fetchData();
+    this.interval = setInterval(this.fetchData, 5000);
   },
   beforeDestroy() {
     this.interval && clearInterval(this.interval);
@@ -267,19 +287,8 @@ export default {
 .btn-view-history-sale {
   top: 0;
 }
-.el-icon-warning {
-  font-size: 300px;
-  color: red;
-}
-.el-dialog__body {
-  display: flex;
-  justify-content: center;
-}
-.el-dialog__title {
-  color: red;
-  font-weight: bold;
-  font-size: 2rem;
-  display: flex;
-  justify-content: center;
+
+.el-progress.el-progress--line.el-progress--text-inside {
+  width: 50px;
 }
 </style>
